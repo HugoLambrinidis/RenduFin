@@ -5,10 +5,11 @@ namespace Website\Controller;
 use Doctrine\DBAL;
 
 class UserController{
+
     public function listUserAction($request){
         $config = new \Doctrine\DBAL\Configuration();
         $connectionParams = array(
-            'dbname' => 'mydb',
+            'dbname' => 'Transversaldb',
             'user' => 'user',
             'password' => 'secret',
             'host' => 'localhost',

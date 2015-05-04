@@ -1,6 +1,6 @@
 {
-  "name": "ProjectName",
-  "description": "Your Project",
+  "name": "RenduFin",
+  "description": "Rendu fin d'année Php, Projet transversal",
   "autoload": {
     "psr-0": {"": [
       "src/"

@@ -12,7 +12,9 @@
 require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\Yaml\Parser;
 $yaml = new Parser();
+var_dump($yaml);
 $routes = $yaml->parse(file_get_contents('../app/config/routing.yml'));
+var_dump($routes);
 if(isset($_GET['p'])) {
     $currentRoute = $routes[$_GET['p']]['controller'];
     $routesArray = explode(':', $currentRoute);
