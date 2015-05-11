@@ -1,53 +1,107 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * User: nico
+ * Date: 23/04/2015
+ * Time: 23:45
+ */
 namespace Website\Controller;
-
-use Doctrine\DBAL;
-
-class UserController{
-
-    public function listUserAction($request){
-        $config = new \Doctrine\DBAL\Configuration();
-        $connectionParams = array(
-            'dbname' => 'Transversaldb',
-            'user' => 'user',
-            'password' => 'secret',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql'
-        );
-
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-        $statement = $conn->prepare('SELECT * from user');
+/**
+ * Class UserController
+ *
+ * Controller of all User actions
+ *
+ * @package Website\Controller
+ */
+class UserController extends AbstractBaseController {
+    /**
+     * Recup all users and print it
+     *
+     * @return array
+     */
+    public static $conn;
+    public function __construct(){
+        self::$conn = $this->getConnection();
+    }
+    public function listUserAction($request) {
+        $statement = self::$conn->prepare('SELECT * FROM users');
         $statement->execute();
         $users = $statement->fetchAll();
-
+        //you can return a Response object
         return [
-            'view' => 'WebSite/View/user/listUser.html.php',
-            'users'=> $users
+            'view' => '../src/WebSite/View/user/listUser.html.php', // should be Twig : 'WebSite/View/user/listUser.html.twig'
+            'users' => $users
         ];
     }
-    public function addUser($request){
-        if($request['request']){
+    /**
+     * swho one user thanks to his id : &id=...
+     *
+     * @return array
+     */
+    public function showUserAction($request) {
+        $statement = self::$conn->prepare('SELECT * FROM users');
+        $statement->execute();
+        $user = $statement->fetchAll();
+        //you can return a Response object
+        return [
+            'view' => 'WebSite/View/user/showUser.html.php', // should be Twig : 'WebSite/View/user/listUser.html.twig'
+            'user' => $user
+        ];
+    }
+    /**
+     * Add User and redirect on listUser after
+     */
+    public function addUserAction($request) {
+        if ($request['request']) { //if POST
+            //handle form with DBAL
+            //...
+            $statement = self::$conn->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
+            $statement->execute([
+                'name' => $name,
+                'password' => sha1($password),
+            ]);
+            //Redirect to show
+            //you should return a RedirectResponse object
             return [
-                'redirect_to' => 'http://.......'
+                'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
             ];
         }
+        //you should return a Response object
         return [
-            'view' => 'WebSite/View/user/listUser.html.php',
-            'users'=> $users
+            'view' => 'WebSite/View/user/addUser.html.php',// => create the file
+            'user' => $user
         ];
     }
-    public function deleteUser($request){
+    /**
+     * Delete User and redirect on listUser after
+     */
+    public function deleteUserAction($request) {
+        //Use Doctrine DBAL here
+        //you should return a RedirectResponse object , redirect to list
         return [
-            'redirect_to' => 'http://.......'
+            'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
         ];
     }
-    public function logUser($request){
-        if($request['request']){
-
+    /**
+     * Log User (Session) , add session in $request first (index.php)
+     */
+    public function logUserAction($request) {
+        if ($request['request']) { //if POST
+            //handle form with DBAL
+            //...
+            $connect = self::$conn->prepare('SELECT id, name, password FROM users WHERE name = :name AND password = :password');
+            $connect->execute(['name' => $_POST['loginName'], 'password' => sha1($_POST['loginPassword'])]);
+            $session = $connect->fetch(PDO::FETCH_ASSOC);
+            return $session;
         }
+        //take FlashBag system from
+        // https://github.com/NicolasBadey/SupInternetTweeter/blob/master/model/functions.php
+        // line 87 : https://github.com/NicolasBadey/SupInternetTweeter/blob/master/index.php
+        // and manage error and success
+        //Redirect to list or home
+        //you should return a RedirectResponse object
         return [
-            'redirect_to' => 'http://.......'
+            'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
         ];
     }
 }
