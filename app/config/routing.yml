@@ -6,3 +6,5 @@ user_delete:
     controller: WebSite\Controller\UserController:deleteUser
 user_log:
     controller: WebSite\Controller\UserController:logUser
+user_show:
+    controller: WebSite\Controller\UserController:showUserAction
