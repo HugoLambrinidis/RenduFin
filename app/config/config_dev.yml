@@ -2,5 +2,5 @@ doctrine:
     host: localhost
     database: phptd8
     user: root
-    password: rool
+    password:
     driver: pdo_mysql
