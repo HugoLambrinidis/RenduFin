@@ -12,13 +12,10 @@
 require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\Yaml\Parser;
 $yaml = new Parser();
-var_dump($yaml);
 $routes = $yaml->parse(file_get_contents('../app/config/routing.yml'));
-var_dump($routes);
 if(isset($_GET['p'])) {
     $currentRoute = $routes[$_GET['p']]['controller'];
     $routesArray = explode(':', $currentRoute);
-    var_dump($routesArray);
 //ControllerClassName, end name is ...Controller
     $controller_class = $routesArray[0];
 //ActionName, end name is ...Action
@@ -30,6 +27,7 @@ if(isset($_GET['p'])) {
 //...
 //$response can be an object
     $response = $controller->$action_name($request);
+
     /**
      * Use Twig !
      */
