@@ -5,10 +5,10 @@ abstract class AbstractBaseController {
     public function getConnection() {
         $config = new \Doctrine\DBAL\Configuration();
         $yaml = new Parser();
-        $routes = $yaml->parse(file_get_contents('../app/config/config-dev.yml'));
+        $routes = $yaml->parse(file_get_contents('../app/config/config_dev.yml'));
         $connectionParams = [
             'dbname' => $routes['doctrine']['database'],
-            'user' => $routes['doctrine']['username'],
+            'user' => $routes['doctrine']['user'],
             'password' => $routes['doctrine']['password'],
             'host' => $routes['doctrine']['host'],
             'driver' => $routes['doctrine']['driver'],
