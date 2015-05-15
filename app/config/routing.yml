@@ -1,10 +1,14 @@
 user_list:
     controller: WebSite\Controller\UserController:listUserAction
 user_add:
-    controller: WebSite\Controller\UserController:addUser
+    controller: WebSite\Controller\UserController:addUserAction
 user_delete:
-    controller: WebSite\Controller\UserController:deleteUser
+    controller: WebSite\Controller\UserController:deleteUserAction
 user_log:
-    controller: WebSite\Controller\UserController:logUser
+    controller: WebSite\Controller\UserController:logUserAction
 user_show:
     controller: WebSite\Controller\UserController:showUserAction
+user_logout:
+    controller: WebSite\Controller\UserController:logOutUserAction
+home:
+    controller: WebSite\Controller\HomeController:homeAction
