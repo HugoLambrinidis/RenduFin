@@ -6,6 +6,10 @@
  * Time: 23:45
  */
 namespace Website\Controller;
+
+use Website\Model\HtmlResponse;
+use WebSite\Model\UserManager;
+
 /**
  * Class UserController
  *
@@ -19,19 +23,15 @@ class UserController extends AbstractBaseController {
      *
      * @return array
      */
-    public static $conn;
-    public function __construct(){
-        self::$conn = $this->getConnection();
-    }
+
     public function listUserAction($request) {
-        $statement = self::$conn->prepare('SELECT * FROM users');
-        $statement->execute();
-        $users = $statement->fetchAll();
-        //you can return a Response object
-        return [
-            'view' => '../src/WebSite/View/user/listUser.html.php', // should be Twig : 'WebSite/View/user/listUser.html.twig'
-            'users' => $users
+        $userManager = new UserManager();
+        $users = $userManager->getUserList();
+        $response = [
+            'view' => '/user/listUser.html.twig',
+            'user_list' => $users
         ];
+        return $response;
     }
     /**
      * swho one user thanks to his id : &id=...
@@ -39,60 +39,93 @@ class UserController extends AbstractBaseController {
      * @return array
      */
     public function showUserAction($request) {
-        $statement = self::$conn->prepare('SELECT * FROM users');
-        $statement->execute();
-        $user = $statement->fetchAll();
-        //you can return a Response object
+        $userManager = new UserManager();
+        $name = $request['session']['user_name']['name'];
+        $user = $userManager->showUser($name);
         return [
-            'view' => 'WebSite/View/user/showUser.html.php', // should be Twig : 'WebSite/View/user/listUser.html.twig'
-            'user' => $user
+            'view' => '/user/showUser.html.twig',
+            'user_show' => $user
         ];
     }
-    /**
-     * Add User and redirect on listUser after
-     */
+
     public function addUserAction($request) {
-        if ($request['request']) { //if POST
-            //handle form with DBAL
-            //...
-            $statement = self::$conn->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
-            $statement->execute([
-                'name' => $name,
-                'password' => sha1($password),
-            ]);
-            //Redirect to show
-            //you should return a RedirectResponse object
-            return [
-                'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
-            ];
+        $userManager = new UserManager();
+        $getForm = new HtmlResponse();
+        $form = $getForm->addUserForm();
+        if ($request['request']) {
+            $name = $_POST['name'];
+            $password = $_POST['password'];
+            $prenom = $_POST['prenom'];
+            $nom = $_POST['nom'];
+            $tel = $_POST['tel'];
+            $mail = $_POST['mail'];
+            $adresse = $_POST['adresse'];
+            $postalCode = $_POST['postalCode'];
+            $users = $userManager->getUserByName($name);
+            if($users[0]['COUNT(`user_name`)'] < 1){
+                $userManager->addUser($name,$password,$prenom,$nom,$tel,$mail,$adresse,$postalCode);
+                $this->logUserAction($request);
+                return [
+                    'redirect_to' => 'index.php?p=home'
+                ];
+            }
+            else {
+                echo "ce pseudo existe déjà !";
+            }
         }
         //you should return a Response object
         return [
-            'view' => 'WebSite/View/user/addUser.html.php',// => create the file
-            'user' => $user
+            'view' => '/user/addUser.html.twig',// => create the file
+            'user_add' => $form
         ];
     }
     /**
      * Delete User and redirect on listUser after
      */
     public function deleteUserAction($request) {
-        //Use Doctrine DBAL here
-        //you should return a RedirectResponse object , redirect to list
+        $name = $request['session']['user_name']['name'];
+        $userManager = new UserManager();
+        $userManager->deleteUser($name);
+        session_destroy();
         return [
-            'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
+            'redirect_to' => 'index.php?p=home'
         ];
     }
     /**
      * Log User (Session) , add session in $request first (index.php)
      */
     public function logUserAction($request) {
-        if ($request['request']) { //if POST
-            //handle form with DBAL
-            //...
-            $connect = self::$conn->prepare('SELECT id, name, password FROM users WHERE name = :name AND password = :password');
-            $connect->execute(['name' => $_POST['loginName'], 'password' => sha1($_POST['loginPassword'])]);
-            $session = $connect->fetch(PDO::FETCH_ASSOC);
-            return $session;
+        $connect = new UserManager();
+        $getForm = new HtmlResponse();
+        $form = $getForm->logUserForm();
+        if ($request['request']) {
+
+            $name = $_POST['name'];
+            $password = $_POST['password'];
+            $session = $connect->logUser($name, $password);
+            if (!empty($name) && !empty($password)) {
+                if ($session != null && $session[0]['user_name'] == $name) {
+                    $_SESSION['user_name'] = ['name' => $session[0]['user_name']];
+                    $_SESSION['user_pwd'] = ['password' => $session[0]['user_pwd']];
+                    return [
+                        'redirect_to' => 'index.php?p=home'
+                    ];
+                } else {
+                    echo "Identifiants inconnus";
+                    return [
+                        'view' => '/user/logUser.html.twig',
+                        'user_log' => $form
+                    ];
+
+                }
+            }
+            else {
+                echo "Veuillez entrer vos identifiants !";
+                return [
+                    'view' => '/user/logUser.html.twig',
+                    'user_log' => $form
+                ];
+            }
         }
         //take FlashBag system from
         // https://github.com/NicolasBadey/SupInternetTweeter/blob/master/model/functions.php
@@ -100,8 +133,17 @@ class UserController extends AbstractBaseController {
         // and manage error and success
         //Redirect to list or home
         //you should return a RedirectResponse object
+
         return [
-            'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
+            'view' => '/user/logUser.html.twig',
+            'user_log' => $form// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
+        ];
+    }
+
+    public function logOutUserAction($request){
+        session_destroy();
+        return [
+            'redirect_to' => 'index.php?p=home'
         ];
     }
 }
