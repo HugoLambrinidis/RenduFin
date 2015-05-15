@@ -2,6 +2,10 @@
 /**
  * This is you FrontController, the only point of access to your webapp
  */
+
+require __DIR__ . '/../vendor/autoload.php';
+use Symfony\Component\Yaml\Yaml;
+session_start();
 /**
  * Use Yaml components for load a config routing, $routes is in yaml app/config/routing.yml :
  *
@@ -9,27 +13,42 @@
  *
  *
  */
-require_once __DIR__.'/../vendor/autoload.php';
-use Symfony\Component\Yaml\Parser;
-$yaml = new Parser();
-$routes = $yaml->parse(file_get_contents('../app/config/routing.yml'));
-if(isset($_GET['p'])) {
-    $currentRoute = $routes[$_GET['p']]['controller'];
-    $routesArray = explode(':', $currentRoute);
+$routes = Yaml::parse(file_get_contents(__DIR__.'/../app/config/routing.yml'));
+if(!empty($_GET['p'])){
+    $page = $_GET['p'];
+} else {
+    $page = 'home'; //put your default route name here, can be user_list
+}
+//check if controller config exits in routing.yml
+if (!empty($routes[$page]['controller'])) {
+    $current_route = explode(':', $routes[$page]['controller']);
+} else {
+    throw new Exception('add routing config for '.$page.' in routing.yml');
+}
 //ControllerClassName, end name is ...Controller
-    $controller_class = $routesArray[0];
+$controller_class = $current_route[0];
 //ActionName, end name is ...Action
-    $action_name = $routesArray[1];
-    $controller = new $controller_class();
+$action_name = $current_route[1];
+$controller = new $controller_class();
 //$Request can by an object
-    $request['request'] = &$_POST;
-    $request['query'] = &$_GET;
-//...
+$request['request'] = &$_POST;
+$request['query'] = &$_GET;
+$request['session'] = &$_SESSION;
 //$response can be an object
-    $response = $controller->$action_name($request);
-
+$response = $controller->$action_name($request);
+/** do a redirection here if $response['redirect_to'] exists **/
+if (!empty($response['redirect_to'])) {
+    header('Location: ' . $response['redirect_to']);
+} elseif (!empty($response['view'])) {
     /**
      * Use Twig !
      */
-    require $response['view'];
+    $loader = new Twig_Loader_Filesystem('../src/WebSite/View');
+    $twig = new Twig_Environment($loader);
+    $twigVariables = $response[$page];
+    $twigRoutes = $response['view'];
+    echo $twig->render($twigRoutes, array($page => $twigVariables));
+
+} else {
+    throw new Exception('your action "'.$page.'" do not return a correct response array, should have "view" or "redirect_to"');
 }
