@@ -10,5 +10,41 @@ user_show:
     controller: WebSite\Controller\UserController:showUserAction
 user_logout:
     controller: WebSite\Controller\UserController:logOutUserAction
+user_modify:
+    controller: WebSite\Controller\UserController:modifyInfosUsersAction
+user_inscription:
+    controller: WebSite\Controller\UserController:coursInscriptionAction
+user_cours:
+    controller: WebSite\Controller\UserController:showUsersCoursAction
+user_showAbo:
+    controller: WebSite\Controller\ProductController:showAboAction
+user_getAbo:
+    controller: Website\Controller\ProductController:getAboAction
+user_manageAbo:
+    controller: WebSite\Controller\ProductController:manageAboAction
+root_delete:
+    controller: WebSite\Controller\RootController:rootDeleteUserAction
+root_add:
+    controller: WebSite\Controller\RootController:rootAddUserAction
+root_modify:
+    controller: WebSite\Controller\RootController:modifyInfosRootAction
+root_abo:
+    controller: WebSite\Controller\ProductController:addRootAbonnement
+root_aboDelete:
+    controller: WebSite\Controller\ProductController:deleteRootAbonnement
+cours_add:
+    controller: WebSite\Controller\ProfController:addCoursAction
+cours_delete:
+    controller: WebSite\Controller\ProfController:deleteCoursAction
+cours_show:
+    controller: WebSite\Controller\ProfController:showCoursAction
+prof_show:
+    controller: WebSite\Controller\ProfController:showCoursForTeacher
+prof_followers:
+    controller: WebSite\Controller\ProfController:showFollowers
 home:
     controller: WebSite\Controller\HomeController:homeAction
+home_login:
+    controller: WebSite\Controller\HomeController:homeAction
+home_backOffice:
+    controller: WebSite\Controller\HomeController:homeBackOfficeAction
