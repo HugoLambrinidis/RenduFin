@@ -1,5 +1,4 @@
 
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -12,9 +11,17 @@
 <div class="wrapper">
     <div class="headerOffice">
         <div class="menuOffice">
-            {% for i in user_add %}
-                {{ i | raw }}
-            {% endfor %}
+
+            <table>
+                <form method="post">
+                    {% for i in cours_show %}
+                        <tr> {% for j in i %}
+                                <td>  {{ j }} </td>
+                            {% endfor %} <td> <input type="radio" value='{{ i.cours_id }}' name="cours_id"></td></tr>
+                    {% endfor %}
+                    <a href="index.php?p=user_inscription"><input type="submit" value="S'inscrire"/></a>
+                </form>
+            </table>
             <button><a href="index.php?p=home_backOffice">retour</a></button>
         </div>
     </div>

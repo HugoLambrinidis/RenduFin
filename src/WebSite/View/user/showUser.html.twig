@@ -1,5 +1,43 @@
-{% for i in user_show.0 %}
-    {{ i | raw }}
-    <br>
-{% endfor %}
-<a href="/RenduFin/web/index.php?p=home"><button>Retour</button></a>
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/basics.css"/>
+    <link rel="stylesheet" href="css/color.css"/>
+    <title>Back Office</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="headerOffice">
+        <div class="menuOffice">
+
+            {% for i in user_show.0 %}
+                {{ i }}
+            {% endfor %}
+            <button><a href="index.php?p=home_backOffice">retour</a></button>
+        </div>
+    </div>
+</div>
+<div class="footer backFooter">
+    <p>Catégorie :</p>
+    <ul>
+        <li class="listFooter">_Cook it yourself</li>
+        <li class="listFooter">_Plant it yourself</li>
+        <li class="listFooter">_Make it yourself</li>
+        <li class="listFooter">_Tale it yourself</li>
+    </ul>
+    <div class="lastLine">
+        <ul>
+            <li class="footerMenu">Nous contacter</li>
+            <li class="footerMenu">Mentions légales</li>
+            <li class="footerMenu">Souscrire à un de nos abonnements</li>
+        </ul>
+        <ul id="SN">
+            <li class="footerSN"><img src="image/logoFacebook.png" alt=""/></li>
+            <li class="footerSN"><img src="image/logoTwitter.png" alt=""/></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,54 @@
 
-{% for i in user_list %}
-    {{ i.user_name }} <br/>
-{% endfor %}
-<a href="/RenduFin/web/index.php?p=home"><button>Retour</button></a>
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/basics.css"/>
+    <link rel="stylesheet" href="css/color.css"/>
+    <title>Back Office</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="headerOffice">
+        <div class="menuOffice">
+            <table>
+                {% for i in user_list %}
+                    <tr>
+                        <td>{{ i.user_name }}</td>
+                        <td>{{ i.prenom }}</td>
+                        <td>{{ i.nom }}</td>
+                        <td>{{ i.telephone }}</td>
+                        <td>{{ i.mail }}</td>
+                        <td>{{ i.adresse }}</td>
+                        <td>{{ i.postalCode }}</td>
+                        <td>{{ i.type }} </td>
+                    </tr>
+
+                {% endfor %}
+            </table>
+            <button><a href="index.php?p=home_backOffice">retour</a></button>
+        </div>
+    </div>
+</div>
+<div class="footer backFooter">
+    <p>Catégorie :</p>
+    <ul>
+        <li class="listFooter">_Cook it yourself</li>
+        <li class="listFooter">_Plant it yourself</li>
+        <li class="listFooter">_Make it yourself</li>
+        <li class="listFooter">_Tale it yourself</li>
+    </ul>
+    <div class="lastLine">
+        <ul>
+            <li class="footerMenu">Nous contacter</li>
+            <li class="footerMenu">Mentions légales</li>
+            <li class="footerMenu">Souscrire à un de nos abonnements</li>
+        </ul>
+        <ul id="SN">
+            <li class="footerSN"><img src="image/logoFacebook.png" alt=""/></li>
+            <li class="footerSN"><img src="image/logoTwitter.png" alt=""/></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

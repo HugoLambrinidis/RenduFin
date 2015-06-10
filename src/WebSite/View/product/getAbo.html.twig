@@ -1,0 +1,58 @@
+
+
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/basics.css"/>
+    <link rel="stylesheet" href="css/color.css"/>
+    <title>Back Office</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="headerOffice">
+        <div class="menuOffice">
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="FZRSQ6TZKPPME">
+                <table>
+                    {% for i in user_getAbo %}
+                        <tr><td>{{ i.nom_abonnement }}</td><td>{{ i.valeur }}</td></tr>
+                    {% endfor %}
+                    <tr><td><input type="hidden" name="on0" value=""></td></tr><tr><td><select name="os0">
+                                <option value="1">{{ user_getAbo.0.nom_abonnement }} : €20,00 EUR - mensuel</option>
+                                <option value="2">{{ user_getAbo.1.nom_abonnement }} : €50,00 EUR - mensuel</option>
+                            </select> </td></tr>
+                </table>
+                <input type="hidden" name="currency_code" value="EUR">
+                <input type="image" src="https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal - la solution de paiement en ligne la plus simple et la plus sécurisée !">
+                <img alt="" border="0" src="https://www.paypalobjects.com/fr_FR/i/scr/pixel.gif" width="1" height="1">
+            </form>
+
+            <button><a href="index.php?p=home_backOffice">retour</a></button>
+        </div>
+    </div>
+</div>
+<div class="footer backFooter">
+    <p>Catégorie :</p>
+    <ul>
+        <li class="listFooter">_Cook it yourself</li>
+        <li class="listFooter">_Plant it yourself</li>
+        <li class="listFooter">_Make it yourself</li>
+        <li class="listFooter">_Tale it yourself</li>
+    </ul>
+    <div class="lastLine">
+        <ul>
+            <li class="footerMenu">Nous contacter</li>
+            <li class="footerMenu">Mentions légales</li>
+            <li class="footerMenu">Souscrire à un de nos abonnements</li>
+        </ul>
+        <ul id="SN">
+            <li class="footerSN"><img src="image/logoFacebook.png" alt=""/></li>
+            <li class="footerSN"><img src="image/logoTwitter.png" alt=""/></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

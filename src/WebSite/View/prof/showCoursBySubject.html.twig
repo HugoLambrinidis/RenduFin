@@ -1,5 +1,4 @@
 
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -12,9 +11,18 @@
 <div class="wrapper">
     <div class="headerOffice">
         <div class="menuOffice">
-            {% for i in user_add %}
-                {{ i | raw }}
-            {% endfor %}
+            <table>
+                {% for i in cours_show %}
+                    {% if cours_show|length > 0 %}
+                        <tr> {% for j in i %}
+                                <td>  {{ j }} </td>
+                            {% endfor %}</tr>
+                    {% else  %}
+                        <b>Il n'y a pas de cours programmé pour le moment.</b>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
             <button><a href="index.php?p=home_backOffice">retour</a></button>
         </div>
     </div>

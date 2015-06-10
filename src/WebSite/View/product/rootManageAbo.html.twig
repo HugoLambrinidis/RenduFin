@@ -1,5 +1,4 @@
 
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -12,10 +11,13 @@
 <div class="wrapper">
     <div class="headerOffice">
         <div class="menuOffice">
-            {% for i in user_add %}
-                {{ i | raw }}
+            {% for i in user_manageAbo %}
+                {% for j in i %}
+                    {{ j | raw }}
+                {% endfor %}
             {% endfor %}
             <button><a href="index.php?p=home_backOffice">retour</a></button>
+
         </div>
     </div>
 </div>
